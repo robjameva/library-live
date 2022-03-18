@@ -4,45 +4,35 @@ const { gql } = require('apollo-server-express');
 // create our typeDefs
 const typeDefs = gql`
 
-type Thought {
+type Book {
     _id: ID
-    thoughtText: String
-    createdAt: String
-    username: String
-    reactionCount: Int
-    reactions: [Reaction]
-  }
-
-  type Reaction {
-    _id: ID
-    reactionBody: String
-    createdAt: String
-    username: String
+    authors: [String]
+    description: String
+    bookId: String
+    image: String
+    link: String
+    title: String
   }
 
   type User {
     _id: ID
     username: String
     email: String
-    friendCount: Int
-    thoughts: [Thought]
-    friends: [User]
+    password: String
+    savedBooks: [Book]
   }
 
   type Query {
-    me: User
+    getSingleUser(userId: ID!): User
     users: [User]
-    user(username: String!): User
-    thoughts(username: String): [Thought]
-    thought(_id: ID!): Thought
   }
 
-  type Mutation {
+  type Mutation {  
+    createUser(username: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
-    addUser(username: String!, email: String!, password: String!): Auth
-    addThought(thoughtText: String!): Thought
-    addReaction(thoughtId: ID!, reactionBody: String!): Thought
-    addFriend(friendId: ID!): User
+    saveBook(userId: ID!, bookId: String!, description: String!, title: String!): User
+    deleteBook(userId: ID!, bookId: String!): User
+
   }
 
   type Auth {
@@ -50,6 +40,12 @@ type Thought {
     user: User
   }
 `;
+
+// addThought(thoughtText: String!): Thought
+// addReaction(thoughtId: ID!, reactionBody: String!): Thought
+// addFriend(friendId: ID!): User
+
+
 
 // export the typeDefs
 module.exports = typeDefs;
