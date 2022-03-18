@@ -4,14 +4,11 @@ const { signToken } = require('../utils/auth');
 
 const resolvers = {
     Query: {
-        getSingleUser: async (parent, { userId }) => {
+        me: async (parent, { userId }) => {
             return User.findOne({ _id: userId })
                 .select('-__v')
         },
-        users: async () => {
-            return User.find()
-                .select('-__v')
-        },
+
     },
     Mutation: {
         createUser: async (parent, args) => {
@@ -41,7 +38,7 @@ const resolvers = {
 
             const updatedUser = await User.findOneAndUpdate(
                 { _id: args.userId },
-                { $addToSet: { savedBooks: { bookId: args.bookId, description: args.description, title: args.title } } },
+                { $addToSet: { savedBooks: { bookId: args.input.bookId, description: args.input.description, title: args.input.title } } },
                 { new: true, runValidators: true }
             );
 
