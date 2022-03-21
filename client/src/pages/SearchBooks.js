@@ -41,6 +41,7 @@ const SearchBooks = () => {
       }
 
       const { items } = await response.json();
+      console.log(items[0])
 
       const bookData = items.map((book) => ({
         bookId: book.id,
@@ -48,6 +49,7 @@ const SearchBooks = () => {
         title: book.volumeInfo.title,
         description: book.volumeInfo.description,
         image: book.volumeInfo.imageLinks?.thumbnail || '',
+        link: book.saleInfo.buyLink
       }));
 
       setSearchedBooks(bookData);
@@ -74,7 +76,6 @@ const SearchBooks = () => {
       const { data } = await saveBook({
         variables: { userId: userId, input: bookToSave }
       });
-      console.log(userId)
 
       // if book successfully saves to user's account, save book id to state
       setSavedBookIds([...savedBookIds, bookToSave.bookId]);
@@ -127,6 +128,7 @@ const SearchBooks = () => {
                   <Card.Title>{book.title}</Card.Title>
                   <p className='small'>Authors: {book.authors}</p>
                   <Card.Text>{book.description}</Card.Text>
+                  {book.link && <a href={book.link} target='_blank'>Find on Google</a>}
                   {Auth.loggedIn() && (
                     <Button
                       disabled={savedBookIds?.some((savedBookId) => savedBookId === book.bookId)}
